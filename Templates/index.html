@@ -1,1 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design assistent</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="fundo"></div>
+    <h1>Assistente de IA para seu Design</h1>
 
+    <textarea id="codigo" placeholder="cole o seu código HTML/CSS aqui:"></textarea>
+    
+    <button onclick="analisar()">Analisar</button>
+    
+    <div id="resultado"></div>
+
+<script>
+function analisar() {
+        const codigo = document.getElementById("codigo").value;
+
+        fetch("/analisar", {
+             method: "POST",
+             headers: {"Content-Type": "application/json"},
+             body: JSON.stringify({codigo})
+        })
+        .then(res => res.json())
+        .then(data =>{
+            if(data.resultado){
+                document.getElementById("resultado").innerText = data.resultado;
+            }else if (data.erro){
+                document.getElementById("resultado").innerText = "Erro: " + data.erro;
+            }else {
+                document.getElementById("resultado").innerText = "Resposta inesperada do servidor.";
+            }
+        })
+        .catch(erro =>{
+            document.getElementById("resultado").innerText = "Erro na requisição.";
+            console.error(error);
+        });
+        
+}
+
+</script>
+</body>
+</html>
